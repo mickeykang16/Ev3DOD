@@ -1,6 +1,11 @@
 # Ev-3DOD (CVPR 2025 Highlight Paper)
 We would like to begin by expressing our sincere gratitude to the reviewers and the area chairs for their valuable feedback and for recognizing the contributions of our paper.
 
+:star2: **Update (09/06/2025)** :star2: We have released train and evaluation codes !
+
+:star2: **Update (31/12/2024)** :star2: We have released Ev-Waymo and DSEC-3DOD datasets !
+
+
 ## Paper
 - **[CVPR2025] [Ev-3DOD: Pushing the Temporal Boundaries of 3D Object Detection with Event Cameras](https://openaccess.thecvf.com/content/CVPR2025/papers/Cho_Ev-3DOD_Pushing_the_Temporal_Boundaries_of_3D_Object_Detection_with_CVPR_2025_paper.pdf)**
 
@@ -17,9 +22,6 @@ A demo video [Youtube](https://youtu.be/JLzVk2TX5FA) can be found by clicking th
 ![image](./figs/overall_framework.png)
 Ev-3DOD consists of two training stages. In Stage 1, the model follows a conventional box proposal approach without using event data. In Stage 2, event data is fused with other sensor modalities to enable detection during blind time intervals.
 
-:star2: **Update (09/06/2025)** :star2: We have released train and evaluation codes !
-
-:star2: **Update (31/12/2024)** :star2: We have released Ev-Waymo and DSEC-3DOD datasets !
 
 
 ## Downloading Ev-Waymo Dataset
@@ -32,7 +34,7 @@ DSEC-3DOD dataset can be downloaded from the link [here](https://drive.google.co
 
 ## Running
 Please read the corresponding README for details
-  - [Data Preprocess](docs/DATA_PREPROCESS.md)
+  - [Data Preprocess](data/DATA_PREPROCESS.md)
 
   Stage1 (only for 10FPS (not using Events))
   - [Installation](Stage1/docs/INSTALL.md)
