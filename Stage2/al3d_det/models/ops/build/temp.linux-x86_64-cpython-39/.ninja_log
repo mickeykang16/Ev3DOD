@@ -1,0 +1,4 @@
+# ninja log v5
+0	3356	1727406329627855172	/mnt1/LoGoNet/detection/al3d_det/models/ops/build/temp.linux-x86_64-cpython-39/mnt1/LoGoNet/detection/al3d_det/models/ops/src/cpu/ms_deform_attn_cpu.o	9b4e7ec4be9e297e
+1	12469	1727406338731881640	/mnt1/LoGoNet/detection/al3d_det/models/ops/build/temp.linux-x86_64-cpython-39/mnt1/LoGoNet/detection/al3d_det/models/ops/src/cuda/ms_deform_attn_cuda.o	1eb97962d89c0759
+1	15465	1727406341735890370	/mnt1/LoGoNet/detection/al3d_det/models/ops/build/temp.linux-x86_64-cpython-39/mnt1/LoGoNet/detection/al3d_det/models/ops/src/vision.o	16cc022080e90e6
