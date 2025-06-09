@@ -1,5 +1,5 @@
 # Getting Started
-The dataset configs are located within [tools/cfgs/det_dataset_configs](../detection/tools/cfgs/dataset_configs), 
+The dataset configs are located within [tools/cfgs/det_dataset_configs](../detection/tools/cfgs/det_dataset_configs), 
 and the model configs are located within [tools/cfgs/det_model_configs](../detection/tools/cfgs/det_model_configs) for different datasets. 
 
 ## Training & Testing
