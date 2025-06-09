@@ -23,7 +23,7 @@ data
 |
 ```
 
-* Generate the event voxel grid by running the following command: 
+## Generate the event voxel grid by running the following command: 
 - Ev-Waymo
 ```python 
 python voxel_generate_waymo.py --dataset_dir ./WAYMO_ROOT
