@@ -24,8 +24,7 @@ data
 ```
 
 * Generate the event voxel grid by running the following command: 
-
-## Ev-Waymo
+- Ev-Waymo
 ```python 
 python 
 ```

@@ -1,0 +1,1 @@
+sh scripts/dist_train_mm.sh 0 1 --cfg_file cfgs/det_model_cfgs/waymo/LoGoNet-1f_play.yaml --extra_tag waymo_logo_wo_intensity_camera_fov --workers 4 --find_unused_parameters
