@@ -1,0 +1,17 @@
+[package]
+name = "safetensors-python"
+version = "0.4.6-dev.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[lib]
+name = "safetensors_rust"
+crate-type = ["cdylib"]
+
+[dependencies]
+pyo3 = { version = "0.22" }
+memmap2 = "0.9"
+serde_json = "1.0"
+
+[dependencies.safetensors]
+path = "../../safetensors"

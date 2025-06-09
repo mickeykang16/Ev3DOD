@@ -1,0 +1,134 @@
+name: Python
+
+on:
+  pull_request:
+
+jobs:
+  build_and_test:
+    name: Check everything builds & tests
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-13, windows-latest]
+        # Lowest and highest, no version specified so that 
+        # new releases get automatically tested against
+        version: [{torch: torch==1.10, python: "3.8"}, {torch: torch, python: "3.11"}]
+          # TODO this would include macos ARM target.
+          # however jax has an illegal instruction issue
+          # that exists only in CI (probably difference in instruction support).
+          # include:
+          #   - os: macos-latest
+          #     version:
+          #       torch: torch
+          #       python: "3.11"
+    defaults:
+      run:
+        working-directory: ./bindings/python
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        
+
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          components: rustfmt, clippy
+
+      - name: Cargo install audit
+        run: cargo install cargo-audit
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: "bindings/python"
+
+      - name: Install Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.version.python }}
+          architecture: "x64"
+
+      - name: Lint with RustFmt
+        run: cargo fmt -- --check
+
+      - name: Lint with Clippy
+        run: cargo clippy --all-targets --all-features -- -D warnings
+
+      - name: Run Audit
+        run: cargo audit -D warnings
+
+      - name: Install
+        run: |
+          pip install -U pip
+          pip install .[numpy,tensorflow]
+          pip install ${{ matrix.version.torch }}
+
+      - name: Install (jax, flax)
+        if: matrix.os != 'windows-latest'
+        run: |
+          pip install .[jax]
+        shell: bash
+
+      - name: Install (mlx)
+        if: matrix.os == 'macos-latest'
+        run: |
+          pip install .[mlx]
+        shell: bash
+
+      - name: Check style
+        run: |
+          pip install .[quality]
+          black --check --line-length 119 --target-version py35 py_src/safetensors tests
+
+      - name: Run tests
+        run: |
+          cargo test
+          pip install .[testing]
+          pytest -sv tests/
+
+  test_s390x_big_endian:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      packages: write
+    name: Test bigendian - S390X
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+      - name: Set short sha
+        id: vars
+        run: echo "GITHUB_SHA_SHORT=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+      - name: Docker meta
+        id: meta
+        uses: docker/metadata-action@v4
+        with:
+          # list of Docker images to use as base name for tags
+          images: |
+            ghcr.io/huggingface/safetensors/s390x
+          # generate Docker tags based on the following events/attributes
+          tags: |
+            type=schedule
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            type=sha
+      - name: Login to Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Test big endian
+        uses: docker/build-push-action@v4
+        with:
+          platforms: linux/s390x
+          file: Dockerfile.s390x.test
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=registry,ref=ghcr.io/huggingface/safetensors/s390x:cache,mode=max
+          cache-to: type=registry,ref=ghcr.io/huggingface/safetensors/s390x:cache,mode=max

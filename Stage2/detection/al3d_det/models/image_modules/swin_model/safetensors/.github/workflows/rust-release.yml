@@ -1,0 +1,33 @@
+name: Rust Release
+
+env:
+  CRATES_TOKEN: ${{ secrets.CRATES_TOKEN }}
+
+on:
+  push:
+    tags:
+      - v*
+
+jobs:
+  rust_publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+
+      - name: Cache Cargo Registry
+        uses: actions/cache@v1
+        with:
+          path: ~/.cargo/registry
+          key: ubuntu-latest-cargo-registry-${{ hashFiles('**/Cargo.toml') }}
+
+      - name: Publish package rust
+        if: ${{ !contains(github.ref, 'rc') }}
+        working-directory: ./safetensors
+        run: cargo publish --token ${CRATES_TOKEN}
+

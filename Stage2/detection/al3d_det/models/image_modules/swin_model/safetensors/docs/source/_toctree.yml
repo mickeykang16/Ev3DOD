@@ -1,0 +1,24 @@
+- sections: 
+  - local: index
+    title: 🤗 Safetensors
+  - local: speed
+    title: Speed Comparison
+  - local: torch_shared_tensors
+    title: Tensor Sharing in Pytorch
+  - local: metadata_parsing
+    title: Metadata Parsing
+  - local: convert-weights
+    title: Convert weights to safetensors
+  title: Getting started
+- sections: 
+  - local: api/torch
+    title: Torch API
+  - local: api/tensorflow
+    title: Tensorflow API
+  - local: api/paddle
+    title: PaddlePaddle API
+  - local: api/flax
+    title: Flax API
+  - local: api/numpy
+    title: Numpy API
+  title: API
