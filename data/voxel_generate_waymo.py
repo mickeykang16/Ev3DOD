@@ -4,13 +4,11 @@ import pdb
 import torch
 from pathlib import Path
 from tqdm import tqdm
-import argparse
-
 
 
 num_bins = 5
-height = 480
-width = 640
+height = 1280
+width = 1920
 
 
 def events_to_voxel_grid(x, y, p, t, num_bins=num_bins, width=width, height=height):
@@ -64,12 +62,13 @@ def events_to_voxel_grid(x, y, p, t, num_bins=num_bins, width=width, height=heig
 def get_event(filepath: Path):
     assert filepath.is_file()
     # x, y, t, p = get_event
-    events = np.load(filepath)
+    events = np.load(filepath)['data']
     # pdb.set_trace()
-    t, x, y, p = events[:, 0], events[:, 1], events[:, 2], events[:, 3]
+    x, y, p, t = events[:, 0], events[:, 1], events[:, 2], events[:, 3]
     
     t = t - t[0]
     # return events
+    # pdb.set_trace()
     # x, y, t, p = events[:, 1], events[:, 2], events[:, 0], events[:, 3]
     
     return x, y, t, p
@@ -85,8 +84,7 @@ if __name__=='__main__':
     dataset_dir = args.dataset_dir
     folder_list_all = os.listdir(dataset_dir)
     folder_list_all.sort()
-            
-
+    
     
     
     
@@ -96,30 +94,29 @@ if __name__=='__main__':
         seq_dir = os.path.join(dataset_dir, folder_name, 'raw_events')
         if not os.path.exists(seq_dir):
             continue
+        
           
         event_vox_save_dir = os.path.join(dataset_dir, folder_name, 'voxel')
         if not os.path.exists(event_vox_save_dir):
             os.makedirs(event_vox_save_dir)
+      
         
         event_path_all = os.listdir(seq_dir)
         event_path_all.sort()
         
         
+        # x, y, t, p = self.get_event(Path(self.event_pathstrings[index]))
         
         for ev_path in tqdm(event_path_all):
             event_path = Path(os.path.join(seq_dir, ev_path))
             x, y, t, p = get_event(event_path)
-            for i in range(10):
-                # time_select = (t.max() + 1)*i*0.1
-                time_select = 0
-                next_time_select = (t.max() + 1)*(i+1)*0.1
-                start_index = (t >= time_select) & (t <= next_time_select)
-                
-                se_p = p[start_index]
-                se_t = t[start_index]
-                se_x = x[start_index]
-                se_y = y[start_index]
-                event_representation = events_to_voxel_grid(se_x, se_y, se_p, se_t)
-                np.savez_compressed(os.path.join(event_vox_save_dir, ev_path.replace('.npy', '_' + str(i+1) + '.npz'))
+            
+            
+            event_representation = events_to_voxel_grid(x, y, p, t)
+            
+            np.savez_compressed(os.path.join(event_vox_save_dir, ev_path)
                         , voxel = event_representation)
-           
+            
+            
+            
+    

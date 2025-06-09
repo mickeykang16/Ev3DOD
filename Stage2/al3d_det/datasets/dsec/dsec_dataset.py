@@ -123,7 +123,7 @@ class DSECTrainingDataset(DatasetTemplate):
                     # pdb.set_trace()
                     img_infos = infos[i]['image']
                     lidar_path = os.path.join(self.data_path, infos[i]['lidar_path'])
-                    event_init_path = os.path.join('/mnt7/dsec_voxels_100FPS_from_start/', 
+                    event_init_path = os.path.join(self.data_path, 
                                                    img_infos['image_0_path'].split('/')[0], 
                                                    'voxel',
                                                    )
@@ -162,7 +162,7 @@ class DSECTrainingDataset(DatasetTemplate):
                     # new_info['annos'] = infos[i]['annos'][j]
                     img_infos = infos[i]['image']
                     lidar_path = os.path.join(self.data_path, infos[i]['lidar_path'])
-                    event_init_path = os.path.join('/mnt7/dsec_voxels_100FPS_from_start/', 
+                    event_init_path = os.path.join(self.data_path,
                                                    img_infos['image_0_path'].split('/')[0], 
                                                    'voxel',
                                                    )

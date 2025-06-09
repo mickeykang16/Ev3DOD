@@ -88,7 +88,6 @@ class WaymoTrainingDataset(DatasetTemplate):
                 info_path = os.path.join(self.data_path, sequence_name, ('%s.pkl' % sequence_name)).replace('.pkl', '_fov_bbox_lidar_check.pkl')
             else:
                 info_path = os.path.join(self.data_path, sequence_name, ('%s.pkl' % sequence_name)).replace('.pkl', '_fov_bbox_lidar_check.pkl')    
-                # info_path = os.path.join(self.data_path, sequence_name, ('%s.pkl' % sequence_name)).replace('.pkl', '_interpolate_fov_bbox_lidar_check.pkl')      
             info_path = self.check_sequence_name_with_all_version(info_path)
             if 's3' in self.root_path:
                 if not self.client.contains(info_path):
@@ -103,49 +102,7 @@ class WaymoTrainingDataset(DatasetTemplate):
                     continue
                 with open(info_path, 'rb') as f:
                     infos = pickle.load(f)
-                
-                
-            ######## 100 FPS
-            # if self.mode != 'train':
-            #     # with open(info_path_, 'rb') as f_:
-            #     #     infos_ = pickle.load(f_)      
-                
-            #     new_infos = []
-            #     infos = infos[:-1]
-            #     for i in range(len(infos)):
-            #         for j in range(10):
-            #             new_info = copy.deepcopy(infos[i])
-            #             new_info['annos'] = infos[i]['annos'][j]
-                        
-            #             ## change image and lidar path
-            #             img_infos = infos[i]['image']
-            #             lidar_path = infos[i]['lidar_path']
-            #             for key in img_infos.keys():
-            #                 if 'path' not in key: continue
-            #                 img_path = img_infos[key]
-            #                 img_path = str(img_path).replace('/waymo_processed_data_v4', '/processed_data_origin/waymo_processed_data_v4')
-            #                 import pdb; pdb.set_trace()
-            #                 # img_seq = img_path.split('/waymo_processed_data_v4/')[-1]
-            #                 # new_img_path = os.path.join('/mnt3/EventVFI/waymo__comparison_ema_sample', img_seq).replace('.png', '_' + str(j) + '.png')
-            #                 # new_img_path = os.path.join('/mnt3/EventVFI/waymo_cbmnet_voxel_add_sample', img_seq).replace('.png', '_' + str(j) + '.png')
-            #                 # new_img_path = os.path.join('/mnt_temp/EventVFI_hh/bin7_demo', img_seq).replace('.png', '_' + str(j) + '.png')
-                            
-                            
-            #                 # pdb.set_trace()
-                            
-            #                 new_info['image'][key] = img_path
-                            
-            #                 new_lidar_seq = lidar_path.split('/waymo_processed_data_v4/')[-1]
-            #                 new_lidar_path = os.path.join('/mnt1/NeuralPCIwaymo/waymo_100000_iter200', new_lidar_seq).replace('with_camera_labels', 'with_camera_labels/lidar_fov')
-                            
-            #                 if j != 0:
-            #                     new_lidar_path = new_lidar_path.replace('.npy', '_' + str(j) + '.npy')
-            #                 new_info['lidar_path'] = new_lidar_path
-            #             #################################
-            #             # pdb.set_trace()
-            #             new_infos.append(new_info)
-            #     infos = new_infos
-            
+           
             
             
             ###### 10 FPS
@@ -157,9 +114,10 @@ class WaymoTrainingDataset(DatasetTemplate):
                     ## change lidar path
                     lidar_path = infos[i]['lidar_path']                        
                     new_lidar_seq = lidar_path.split('/waymo_processed_data_v4/')[-1]
-                    # new_lidar_path = os.path.join('/mnt3/NeuralPCIwaymo/waymo', new_lidar_seq).replace('with_camera_labels', 'with_camera_labels/lidar_fov')
-                    new_lidar_path = lidar_path.replace('/waymo_processed_data_v4', '/processed_data_origin/waymo_processed_data_v4').replace('with_camera_labels', 'with_camera_labels/lidar_fov')
                     
+                    new_lidar_path = os.path.join(self.data_path, lidar_path.split('/waymo_processed_data_v4/')[-1].replace('with_camera_labels', 'with_camera_labels/lidar_fov'))
+                    
+
                     new_info['lidar_path'] = new_lidar_path
                     #################################
                     # pdb.set_trace()
@@ -202,18 +160,7 @@ class WaymoTrainingDataset(DatasetTemplate):
 
         return seq_file
 
-    # def get_infos_and_points(self, idx_list):
-    #     infos, points = [], []
-    #     for i in idx_list:
-    #         lidar_path = self.infos[i]["lidar_path"]
-    #         if 's3' in self.root_path:
-    #             current_point = np.load(io.BytesIO(self.client.get(lidar_path))) -
-    #         else:
-    #             current_point = np.load(lidar_path)
-    #         infos.append(self.infos[i])
-    #         points.append(current_point)
-
-    #     return infos, points
+   
     def get_infos_and_points(self, idx_list):
         infos, points = [], []
         for i in idx_list:
@@ -227,10 +174,9 @@ class WaymoTrainingDataset(DatasetTemplate):
                 # lidar_path = str(lidar_path).replace('/cpfs2/user/matao/workspace/3dal-toolchain-v2/detection/data', '../data')
                 
                 if self.mode == 'train':
-                    lidar_path = str(lidar_path).replace('/waymo_processed_data_v4', '/processed_data_origin/waymo_processed_data_v4'
-                                                    ).replace('with_camera_labels', 'with_camera_labels/lidar_fov')
-                # pdb.set_trace()
-                # lidar_path = str(lidar_path).replace('with_camera_labels', 'with_camera_labels/lidar_front')
+                    # lidar_path = str(lidar_path).replace('/waymo_processed_data_v4', '/processed_data_origin/waymo_processed_data_v4'
+                    #                                 ).replace('with_camera_labels', 'with_camera_labels/lidar_fov')
+                    lidar_path = os.path.join(self.data_path, lidar_path.split('/waymo_processed_data_v4/')[-1].replace('with_camera_labels', 'with_camera_labels/lidar_fov'))
                 
                 # if self.mode != 'train':
                 #     seq_name = lidar_path.split('/')[-1]
@@ -247,22 +193,7 @@ class WaymoTrainingDataset(DatasetTemplate):
                 # if self.mode == 'train':
                 num = current_point.shape[0]
                 
-                # num_points = 16192
-                # num_points = 65536
-                # pc_points_idx = []
-                # pc_sampled = []
-                # if num >= num_points:
-                    # pdb.set_trace()
-                    # pc_points_idx = np.random.choice(num, num_points, replace=False)
-                    # pc_sampled = current_point[pc_points_idx].astype('float32')
-                    # current_point = np.array(pc_sampled)
-                
-                # if self.mode != 'train':
-                #     pdb.set_trace()
-            
-                    
-                    # if dist.get_rank() == 0:
-                    #     pdb.set_trace()
+              
             
             # if dist.get_rank() == 0:
             #     pdb.set_trace()
@@ -300,8 +231,11 @@ class WaymoTrainingDataset(DatasetTemplate):
                         )
                     else:
                         # if self.mode == 'train':
-                        img_path = str(img_path).replace('/waymo_processed_data_v4', '/processed_data_origin/waymo_processed_data_v4')
+                        # img_path = str(img_path).replace('/waymo_processed_data_v4', '/processed_data_origin/waymo_processed_data_v4')
                         
+                        img_path = os.path.join(self.data_path, img_path.split('/waymo_processed_data_v4/')[-1])  
+
+
                         #     seq_name = img_path.split('/')[-1]
                         #     seq_idx = int(seq_name.split('.')[0])
                         #     if seq_idx % 10 != 0:

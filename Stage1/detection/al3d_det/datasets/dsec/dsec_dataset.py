@@ -106,59 +106,6 @@ class DSECTrainingDataset(DatasetTemplate):
                 with open(info_path, 'rb') as f_:
                     infos_ = pickle.load(f_)      
                 
-                # new_infos = []
-                # infos = infos[:-1]
-                # for i in range(len(infos)):
-                #     for j in range(10):
-                #         new_info = copy.deepcopy(infos[i])
-                #         new_info['annos'] = infos[i]['annos'][j]
-                #         # new_info['annos'] = infos[i]['annos'][0]
-                        
-                        
-                #         ## change image and lidar path
-                #         # img_infos = infos[i]['image']
-                #         # lidar_path = infos[i]['lidar_path']
-                #         # disp_path = infos[i]['disparity_path']
-                #         # for key in img_infos.keys():
-                #         #     if 'path' not in key: continue
-                #         #     # img_path = img_infos[key].replace('image_0/', '')
-                #         #     img_path = img_infos[key]
-                #         #     new_img_path = os.path.join('/home/user/jaeyoung/data/dsec_cbm', img_path).replace('.png', '_' + str(j) + '.png')
-                #         #     # new_img_path = os.path.join('/ssd_jy/dsec_ema', img_path).replace('.png', '_' + str(j) + '.png')
-                #         #     new_info['image'][key] = new_img_path
-                #         #     new_info['image'][key] = img_path
-                            
-                #             # pdb.set_trace()
-                            
-                #             # new_lidar_path = os.path.join('/ssd_jy/dsec_lidar_interpolate', lidar_path)
-                #             # if j != 0:
-                #             #     new_lidar_path = new_lidar_path.replace('.npy', '_' + str(j) + '.npy')
-                #             # new_info['lidar_path'] = new_lidar_path.replace('_fov', '')
-                #             # new_disp_path = os.path.join('/ssd_jy/dsec_disparity_interpolate', disp_path)
-                #             # if j != 0:
-                #             #     new_disp_path = new_disp_path.replace('.npy', '_' + str(j) + '.npy')
-                #             # new_info['disparity_path'] = new_disp_path
-                            
-                            
-                #         #################################
-                #         # pdb.set_trace()
-                #         new_infos.append(new_info)
-                # infos = new_infos
-                
-                
-            # if dist.get_rank() == 0:
-                # numbers = list(range(0, 199))
-                # numbers_ = numbers[0:-1:10]
-                # pdb.set_trace()
-                
-            # if self.mode == 'train':
-            #     infos = infos[0:-1:10]
-            # infos = infos[0:20]
-            
-            # infos = infos[80:100]
-            
-            # if dist.get_rank() == 0:
-            #     pdb.set_trace()
                 
             waymo_infos.extend(infos)
         
@@ -300,7 +247,7 @@ class DSECTrainingDataset(DatasetTemplate):
                     else:
                         # pdb.set_trace()
                         # img_path = str(img_path).replace('/waymo_processed_data_v4', '/processed_data_origin/waymo_processed_data_v4')
-                        img_path = str(img_path).replace('/home/user', '/home/user')
+                        img_path = str(img_path)
                         img_path = os.path.join(self.data_path, img_path)
                         # if self.mode != 'train':
                         #     seq_name = img_path.split('/')[-1]

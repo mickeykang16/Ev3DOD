@@ -122,8 +122,10 @@ class WaymoTrainingDataset(DatasetTemplate):
                     # new_info['annos'] = infos[i]['annos'][j]
                     img_infos = infos[i]['image']
                     lidar_path = infos[i]['lidar_path']
-                    event_init_path = img_infos['image_' + str(i) + '_path'].replace('/mnt1/LoGoNet/detection/data/waymo/waymo_processed_data_v4', '/mnt7/waymo_voxels_100FPS_from_start')\
-                                    .replace('/image_0', '')
+                    
+                    event_init_path = os.path.join(self.data_path, img_infos['image_' + str(i) + '_path'].split('/waymo_processed_data_v4/')[-1].replace('/image_0', '/voxel'))
+                    
+                    
 
                     event_dir = '/' + os.path.join(*event_init_path.split('/')[:-1])
                     init_number = int(event_init_path.split('/')[-1].split('.png')[0]) + 1
@@ -161,10 +163,8 @@ class WaymoTrainingDataset(DatasetTemplate):
                         for key in img_infos.keys():
                             if 'path' not in key: continue
                         img_path = img_infos[key]
-                        event_init_path = img_infos['image_' + str(i) + '_path'].replace('/mnt1/LoGoNet/detection/data/waymo/waymo_processed_data_v4', '/mnt7/waymo_voxels_100FPS_from_start')\
-                                    .replace('/image_0', '')
-                        # event_init_path = img_path.replace('/mnt1/LoGoNet/detection/data/waymo/waymo_processed_data_v4', '/ssd_jy/waymo_voxels_100FPS_from_start')\
-                        #             .replace('/image_0', '')
+                        event_init_path = os.path.join(self.data_path, img_infos['image_' + str(i) + '_path'].split('/waymo_processed_data_v4/')[-1].replace('/image_0', '/voxel'))
+                    
                     except:
                         pdb.set_trace()
                     # pdb.set_trace()
@@ -251,9 +251,11 @@ class WaymoTrainingDataset(DatasetTemplate):
                 # lidar_path = str(lidar_path).replace('/cpfs2/user/matao/workspace/3dal-toolchain-v2/detection/data', '../data')
                 
                 # if self.mode == 'train':
-                new_lidar_seq = lidar_path.split('/waymo_processed_data_v4/')[-1]
-                lidar_path = os.path.join(self.root_path, 'waymo_processed_data_v4', new_lidar_seq).replace('with_camera_labels', 'with_camera_labels/lidar_fov')
+                # new_lidar_seq = lidar_path.split('/waymo_processed_data_v4/')[-1]
+                # lidar_path = os.path.join(self.root_path, 'waymo_processed_data_v4', new_lidar_seq).replace('with_camera_labels', 'with_camera_labels/lidar_fov')
+                lidar_path = os.path.join(self.data_path, lidar_path.split('/waymo_processed_data_v4/')[-1].replace('with_camera_labels', 'with_camera_labels/lidar_fov'))
                 
+
                 # pdb.set_trace()
                 
                 # lidar_path = str(lidar_path).replace('with_camera_labels', 'with_camera_labels/lidar_fov')
@@ -326,8 +328,8 @@ class WaymoTrainingDataset(DatasetTemplate):
                         )
                     else:
                         # if self.mode == 'train':
-                        img_path = str(img_path).replace('/mnt1/LoGoNet/detection/data/waymo/waymo_processed_data_v4', self.data_path)
-                        
+                        img_path = os.path.join(self.data_path, img_path.split('/waymo_processed_data_v4/')[-1])  
+
                         # pdb.set_trace()
                         
                         #     seq_name = img_path.split('/')[-1]

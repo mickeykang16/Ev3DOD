@@ -9,8 +9,7 @@ from .dataset_kitti import DatasetTemplate_KITTI
 from .waymo.waymo_dataset import WaymoTrainingDataset, WaymoInferenceDataset
 from .kitti.kitti_dataset import KittiDataset
 from .nuscenes.nuscenes_dataset import NuScenesDataset
-from .dsec.dsec_dataset import DSECTrainingDataset, DSECInferenceDataset
-from .m3ed.m3ed_dataset import M3EDTrainingDataset, M3EDInferenceDataset
+from .dsec.dsec_dataset import DSECTrainingDataset, DSECInferenceDataset\
 __all__ = {
     'DatasetTemplate': DatasetTemplate,
     'WaymoTrainingDataset': WaymoTrainingDataset,
@@ -19,7 +18,6 @@ __all__ = {
     'KittiDataset': KittiDataset,
     'NuScenesDataset': NuScenesDataset,
     'DSECTrainingDataset': DSECTrainingDataset,
-    'M3EDTrainingDataset': M3EDTrainingDataset,
 }
 
 

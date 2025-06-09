@@ -26,6 +26,12 @@ data
 * Generate the event voxel grid by running the following command: 
 - Ev-Waymo
 ```python 
-python 
+python voxel_generate_waymo.py --dataset_dir ./WAYMO_ROOT
 ```
+
+- DSEC-3DOD
+```python 
+python voxel_generate_dsec.py --dataset_dir ./DSEC_ROOT
+```
+
 
