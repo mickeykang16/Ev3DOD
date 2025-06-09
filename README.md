@@ -1,7 +1,7 @@
 # Ev-3DOD (CVPR 2025 Highlight Paper)
 
 ## Paper
-- **[CVPR2025] [Ev-3DOD: Pushing the Temporal Boundaries of 3D Object Detection with Event Cameras](https://openaccess.thecvf.com/content/CVPR2025/papers/Cho_Ev-3DOD_Pushing_the_Temporal_Boundaries_of_3D_Object_Detection_with_CVPR_2025_paper.pdf).**
+- **[CVPR2025] [Ev-3DOD: Pushing the Temporal Boundaries of 3D Object Detection with Event Cameras](https://openaccess.thecvf.com/content/CVPR2025/papers/Cho_Ev-3DOD_Pushing_the_Temporal_Boundaries_of_3D_Object_Detection_with_CVPR_2025_paper.pdf)**
 
 # :video_camera: Demo Video
 A demo video [Youtube](https://youtu.be/JLzVk2TX5FA) can be found by clicking the image below: 
@@ -13,6 +13,7 @@ A demo video [Youtube](https://youtu.be/JLzVk2TX5FA) can be found by clicking th
 
 ## Framework
 ![image](./figs/teaser.png)
+![image](./figs/overall_framework.png)
 Ev-3DOD consists of two training stages. In Stage 1, the model follows a conventional box proposal approach without using event data. In Stage 2, event data is fused with other sensor modalities to enable detection during blind time intervals.
 
 :star2: **Update (09/06/2025)** :star2: We have released train and evaluation codes !
