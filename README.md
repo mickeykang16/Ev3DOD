@@ -44,7 +44,16 @@ Please read the corresponding README for details
 
 
 ## Main results
-- [Benchmark](Benchmark/README.md)
+
+### Results on Ev-Waymo Dataset
+<img src="Benchmark/results/waymo_result.png" width="100%" height="100%">
+
+### Results on DSEC-3DOD Dataset
+<img src="Benchmark/results/dsec_result.png" width="100%" height="100%">
+
+Our main paper reports results using the metrics provided by the Waymo Open Dataset. For broader comparability and to facilitate future research, we also re-evaluated the same models using the KITTI metrics. The results can be found at the link below.
+
+- [LiDAR Settings & KITTI Metric](Benchmark/README.md)
 
 
 ## Acknowledgement
