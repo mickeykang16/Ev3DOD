@@ -1,4 +1,4 @@
-# Ev-3DOD (CVPR 2025 Highlight Paper)
+# Ev-3DOD (CVPR 2025 Highlight)
 We would like to begin by expressing our sincere gratitude to the reviewers and the area chairs for their valuable feedback and for recognizing the contributions of our paper.
 
 :star2: **Update (09/06/2025)** :star2: We have released train and evaluation codes !
