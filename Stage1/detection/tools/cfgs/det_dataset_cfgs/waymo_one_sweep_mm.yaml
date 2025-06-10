@@ -1,5 +1,5 @@
 DATASET: 'WaymoTrainingDataset'
-DATA_PATH: '../data/waymo/processed_data_origin'
+DATA_PATH: './data/waymo'
 # OSS_PATH: 'cluster2:s3://dataset/waymo'
 PROCESSED_DATA_TAG: 'waymo_processed_data_v4'
 
