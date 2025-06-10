@@ -289,18 +289,7 @@ class CenterPointMM(nn.Module):
             #     pdb.set_trace()
             if not self.training:
                 ret_lidar_list.append(ret_lidar)
-        
-        # pdb.set_trace()
-        save_dir='../output/viz_feat/' + str(batch_dict['sequence_name'][0])
-        os.makedirs(save_dir, exist_ok=True)
-        for i, feat_dict in enumerate(batch_dict['viz_feat']):
-            file_name = os.path.join(save_dir, str(batch_dict['frame_id'][0]).zfill(4) + f'_{i+1}.npz')
-            np.savez(file_name, 
-                     ev_feat=feat_dict['ev_feat'][0],
-                     ev_voxel_feat=feat_dict['ev_voxel_feat'],
-                     point_features=feat_dict['point_features'],
-                     point_coords=feat_dict['point_coords'][:, 1:],)
-        
+                
         if self.training:
             return ret_lidar
         else:
