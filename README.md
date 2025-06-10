@@ -21,15 +21,18 @@ A demo video [Youtube](https://youtu.be/JLzVk2TX5FA) can be found by clicking th
 ## Framework
 ![image](./figs/teaser.png)
 ![image](./figs/overall_framework.png)
-Ev-3DOD consists of two training stages. In Stage 1, the model follows a conventional box proposal approach without using event data. In Stage 2, event data is fused with other sensor modalities to enable detection during blind time intervals.
+Ev-3DOD consists of two training stages. 
+- In Stage 1, the model follows a conventional box proposal approach without using event data. 
+- In Stage 2, event data is fused with other sensor modalities to enable detection during blind time intervals.
 
 
 
-## Downloading Ev-Waymo Dataset
-Ev-Waymo dataset can be downloaded from the link [here](https://drive.google.com/drive/folders/1Q-7VjcGx_GTrWrgTXmpoEd02qms81QyK?usp=drive_link).
+## Downloading Ev-Waymo and DSEC-3DOD Datasets
+In this study, we used the following two datasets. In particular, we manually annotated the DSEC-3DOD dataset. If you use the following datasets, please cite this work and also cite the original papers corresponding to the datasets.
 
-## Downloading DSEC-3DOD Dataset
-DSEC-3DOD dataset can be downloaded from the link [here](https://drive.google.com/drive/folders/1A6XhFxDlqcIgTi28G01fhXBQceaK5vjV?usp=drive_link).
+- Ev-Waymo dataset can be downloaded from the link [here](https://drive.google.com/drive/folders/1Q-7VjcGx_GTrWrgTXmpoEd02qms81QyK?usp=drive_link).
+
+- DSEC-3DOD dataset can be downloaded from the link [here](https://drive.google.com/drive/folders/1A6XhFxDlqcIgTi28G01fhXBQceaK5vjV?usp=drive_link).
 
 
 
