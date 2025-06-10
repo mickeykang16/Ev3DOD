@@ -5,6 +5,7 @@ We would like to begin by expressing our sincere gratitude to the reviewers and 
 
 :star2: **Update (31/12/2024)** :star2: We have released Ev-Waymo and DSEC-3DOD datasets !
 
+This repo is the official implementation of: Ev-3DOD: Pushing the Temporal Boundaries of 3D Object Detection with Event Cameras, CVPR 2025.
 
 ## Paper
 - **[CVPR2025] [Ev-3DOD: Pushing the Temporal Boundaries of 3D Object Detection with Event Cameras](https://openaccess.thecvf.com/content/CVPR2025/papers/Cho_Ev-3DOD_Pushing_the_Temporal_Boundaries_of_3D_Object_Detection_with_CVPR_2025_paper.pdf)**
