@@ -1,6 +1,8 @@
 # Ev-3DOD (CVPR 2025 Highlight)
 We would like to begin by expressing our sincere gratitude to the reviewers and the area chairs for their valuable feedback and for recognizing the contributions of our paper.
 
+:star2: **Update (02/08/2025)** :star2: We have released Ev-Waymo dataset on Hugging Face !
+
 :star2: **Update (20/07/2025)** :star2: We have released DSEC-3DOD dataset on Hugging Face !
 
 :star2: **Update (09/06/2025)** :star2: We have released train and evaluation codes !
@@ -30,9 +32,9 @@ Ev-3DOD consists of two training stages.
 
 
 ## Downloading Ev-Waymo and DSEC-3DOD Datasets
-In this study, we used the following two datasets. In particular, we manually annotated the DSEC-3DOD dataset. If you use the following datasets, please cite this work and also cite the original papers corresponding to the datasets.
+In this study, we used the following two datasets. In particular, we manually annotated the DSEC-3DOD dataset. If you use the following datasets, please cite this work and also cite the original papers corresponding to the datasets. 
 
-- Ev-Waymo dataset can be downloaded from the link [here](https://drive.google.com/drive/folders/1Q-7VjcGx_GTrWrgTXmpoEd02qms81QyK?usp=drive_link).
+- Ev-Waymo dataset can be downloaded from the link [hugging face](https://huggingface.co/datasets/mickeykang/Ev-Waymo).
 
 - DSEC-3DOD dataset can be downloaded from the [google drive](https://drive.google.com/drive/folders/1A6XhFxDlqcIgTi28G01fhXBQceaK5vjV?usp=drive_link) or [hugging face](https://huggingface.co/datasets/mickeykang/DSEC-3DOD).
 
