@@ -93,6 +93,11 @@ class CenterPointMM(nn.Module):
         self.training = self.lidar.training
         self.second_stage = self.lidar.second_stage
         self.pretrain = self.lidar.pretrain
+        # True (default): keep the frozen Stage 1 modules and the event backbone in eval() mode
+        # during Stage 2 training. False: leave them in train mode (BatchNorm statistics are
+        # updated, dropout / drop-path active), which is how the released DSEC-3DOD Stage 2
+        # checkpoint was trained.
+        self.frozen_modules_eval = model_cfg.get('FROZEN_MODULES_EVAL', True)
         
         self.grid_size = self.lidar.dataset.grid_size[::-1] + [1, 0, 0]
         voxel_size  = self.lidar.dataset.voxel_size
@@ -144,15 +149,16 @@ class CenterPointMM(nn.Module):
     def forward(self, batch_dict):
         # voxel coord [0, Z, Y, X] <= typical lidar frame 
         
-        self.camera.img_backbone.eval()
-        self.lidar.module_list[0].eval()
-        self.lidar.module_list[1].eval()
-        self.lidar.module_list[2].eval()
-        self.lidar.module_list[3].eval()
-        self.lidar.module_list[4].eval()
-        self.lidar.module_list[5].eval()
-        # self.lidar.module_list[10].eval()
-        self.camera.ev_backbone.eval()
+        if self.frozen_modules_eval:
+            self.camera.img_backbone.eval()
+            self.lidar.module_list[0].eval()
+            self.lidar.module_list[1].eval()
+            self.lidar.module_list[2].eval()
+            self.lidar.module_list[3].eval()
+            self.lidar.module_list[4].eval()
+            self.lidar.module_list[5].eval()
+            # self.lidar.module_list[10].eval()
+            self.camera.ev_backbone.eval()
         
         
         ret_lidar = None

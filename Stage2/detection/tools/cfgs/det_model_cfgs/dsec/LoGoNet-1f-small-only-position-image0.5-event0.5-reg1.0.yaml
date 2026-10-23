@@ -9,6 +9,9 @@ MODEL:
     # remember to use "--pretrained_model" to load 1-stage checkpoint
     PRETRAIN: False
     TRAIN_EV_CLS_ONLY: False
+    # The released checkpoint was trained with the frozen Stage 1 modules and the event
+    # backbone in train mode (their BatchNorm statistics were updated every iteration).
+    FROZEN_MODULES_EVAL: False
     VFE:
         NAME: DynamicMeanVFE
         
@@ -415,7 +418,7 @@ MODEL:
 
 OPTIMIZATION:
     BATCH_SIZE_PER_GPU: 3
-    NUM_EPOCHS: 10
+    NUM_EPOCHS: 40  # released checkpoint: epoch 40, 56k iterations (1 GPU x 3)
 
     OPTIMIZER: adam_onecycle
     LR: 0.001
