@@ -4,7 +4,7 @@ import pdb
 import torch
 from pathlib import Path
 from tqdm import tqdm
-
+import argparse
 
 num_bins = 5
 height = 1280
@@ -107,16 +107,25 @@ if __name__=='__main__':
         
         # x, y, t, p = self.get_event(Path(self.event_pathstrings[index]))
         
+        # Same scheme as voxel_generate_dsec.py: for each raw event file
+        # <frame>.npz (events between frame-1 and frame) write 10 cumulative
+        # sub-window voxels <frame>_k.npz covering [0, k/10 * T], k = 1..10.
+        # Stage2 WaymoTrainingDataset reads <frame>_1.npz ... <frame>_9.npz.
         for ev_path in tqdm(event_path_all):
             event_path = Path(os.path.join(seq_dir, ev_path))
             x, y, t, p = get_event(event_path)
-            
-            
-            event_representation = events_to_voxel_grid(x, y, p, t)
-            
-            np.savez_compressed(os.path.join(event_vox_save_dir, ev_path)
-                        , voxel = event_representation)
-            
-            
-            
-    
+            for i in range(10):
+                time_select = 0
+                next_time_select = (t.max() + 1) * (i + 1) * 0.1
+                start_index = (t >= time_select) & (t <= next_time_select)
+
+                se_p = p[start_index]
+                se_t = t[start_index]
+                se_x = x[start_index]
+                se_y = y[start_index]
+                if se_t.shape[0] < 2:
+                    event_representation = torch.zeros((num_bins, height, width), dtype=torch.float)
+                else:
+                    event_representation = events_to_voxel_grid(se_x, se_y, se_p, se_t)
+                np.savez_compressed(os.path.join(event_vox_save_dir, ev_path.replace('.npz', '_' + str(i + 1) + '.npz')),
+                                    voxel=event_representation)

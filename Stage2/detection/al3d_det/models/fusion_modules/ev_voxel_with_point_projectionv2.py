@@ -239,14 +239,6 @@ class EVVoxelWithPointProjectionV2(nn.Module):
                         # 
                     final_img_voxels[index_mask] = img_voxels
         
-        if 'viz_feat' not in batch_dict.keys(): batch_dict['viz_feat']=[]
-        viz_feature = {
-            'ev_feat': image_feat.cpu().numpy(),
-            'ev_voxel_feat': final_img_voxels.cpu().numpy(),
-            'point_features': point_features.cpu().numpy(),
-            'point_coords': point_coords.cpu().numpy(),
-        }
-        batch_dict['viz_feat'].append(viz_feature)
                 
         return final_img_voxels
                 

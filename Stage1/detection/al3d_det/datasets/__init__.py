@@ -5,17 +5,14 @@ from torch.utils.data import DistributedSampler as _DistributedSampler
 from al3d_utils import common_utils
 
 from .dataset import DatasetTemplate
-from .dataset_kitti import DatasetTemplate_KITTI
 from .waymo.waymo_dataset import WaymoTrainingDataset, WaymoInferenceDataset
-from .kitti.kitti_dataset import KittiDataset
 from .nuscenes.nuscenes_dataset import NuScenesDataset
-from .dsec.dsec_dataset import DSECTrainingDataset, DSECInferenceDataset\
+from .dsec.dsec_dataset import DSECTrainingDataset, DSECInferenceDataset
+
 __all__ = {
     'DatasetTemplate': DatasetTemplate,
     'WaymoTrainingDataset': WaymoTrainingDataset,
     'WaymoInferenceDataset': WaymoInferenceDataset,
-    'DatasetTemplate_KITTI': DatasetTemplate_KITTI,
-    'KittiDataset': KittiDataset,
     'NuScenesDataset': NuScenesDataset,
     'DSECTrainingDataset': DSECTrainingDataset,
 }

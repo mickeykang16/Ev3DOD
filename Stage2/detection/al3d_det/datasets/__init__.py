@@ -7,7 +7,6 @@ from al3d_utils import common_utils
 from .dataset import DatasetTemplate
 from .dataset_kitti import DatasetTemplate_KITTI
 from .waymo.waymo_dataset import WaymoTrainingDataset, WaymoInferenceDataset
-from .kitti.kitti_dataset import KittiDataset
 from .nuscenes.nuscenes_dataset import NuScenesDataset
 from .dsec.dsec_dataset import DSECTrainingDataset
 
@@ -16,7 +15,6 @@ __all__ = {
     'WaymoTrainingDataset': WaymoTrainingDataset,
     'WaymoInferenceDataset': WaymoInferenceDataset,
     'DatasetTemplate_KITTI': DatasetTemplate_KITTI,
-    'KittiDataset': KittiDataset,
     'NuScenesDataset': NuScenesDataset,
     'DSECTrainingDataset': DSECTrainingDataset,
 }

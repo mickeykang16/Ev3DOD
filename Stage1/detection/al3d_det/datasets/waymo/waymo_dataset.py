@@ -51,7 +51,7 @@ class WaymoTrainingDataset(DatasetTemplate):
         self.max_distance = self.dataset_cfg.get('MAX_DIST', 80.0)
         self.data_path = self.root_path + '/' + dataset_cfg.PROCESSED_DATA_TAG
         self.split = self.dataset_cfg.DATA_SPLIT[self.mode]
-        split_dir = os.path.join(self.root_path, '../ImageSets', self.split + '_sample.txt')
+        split_dir = os.path.join(self.root_path, 'ImageSets', self.split + '_sample.txt')
         if 's3' in self.root_path:
             from petrel_client.client import Client
             self.client = Client('~/.petreloss.conf')

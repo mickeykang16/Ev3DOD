@@ -613,6 +613,10 @@ class VoxelAggregationHead(RoIHeadTemplate):
                     batch_dict['roi_scores'] = torch.zeros([batch_dict['batch_size'], 1], device=batch_dict['rois'][0].device)
                     batch_gt_ids = torch.zeros([batch_dict['batch_size'], 1], device=batch_dict['rois'][0].device)
             
+        # RoI / target preparation above stays under no_grad. The feature path below
+        # (event-voxel fusion, RoI grid pooling, shared FC) must receive gradients in
+        # training; otherwise only ev_reg_layers / ev_cls_layers are trained (issue #7).
+        with torch.set_grad_enabled(self.training):
             # batch_dict = self.GOF_LSTM(batch_dict) 
             batch_dict['point_features'], batch_dict['point_coords'] = self.get_point_voxel_features(batch_dict)
             

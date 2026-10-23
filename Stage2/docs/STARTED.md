@@ -4,14 +4,24 @@ and the model configs are located within [tools/cfgs/det_model_configs](../detec
 
 Pre-trained checkpoint files can be downloaded from [here](https://drive.google.com/drive/folders/1_wl4eHlia9FOdOPKhCjEJ21w9LnG0OuS?usp=drive_link).
 
+## Pipeline
+Ev-3DOD is trained in two stages, and Stage 2 needs a Stage 1 checkpoint:
+
+1. **Stage 1** (`Stage1/`, 10 FPS, LiDAR + image, no events): train from scratch with `Stage1/detection/tools/scripts/dist_train_mm.sh`, or use the released `*_stage1.pth`.
+2. **Stage 2** (`Stage2/`, 100 FPS with events): start from the Stage 1 checkpoint with `--pretrained_model`. Stage 2 freezes the modules inherited from Stage 1 (3D/2D backbones, dense head, image backbone, LiDAR-image RoI head; `requires_grad=False` and kept in `eval()`), and trains the event backbone, the event-voxel fusion and the event RoI head (`ROI_HEAD_EV`).
+3. **Evaluation** at 100 FPS with `scripts/dist_test.sh` and the Stage 2 checkpoint.
+
+`--pretrained_model` copies every tensor whose name and shape match into the Stage 2 model; `--ckpt` is only for resuming an interrupted Stage 2 run. Prepare the data as described in [data/DATA_PREPROCESS.md](../../data/DATA_PREPROCESS.md) first (the event voxel grids are required for Stage 2).
+
 
 ## Training & Testing
 
 ### Train a model
 You could optionally add extra command line parameters `--batch_size ${BATCH_SIZE}` and `--epochs ${EPOCHS}` to specify your preferred parameters. 
 ```shell script
-sh scripts/dist_train.sh ${NUM_GPUS} --cfg_file ${CONFIG_FILE}
+bash scripts/dist_train_mm.sh ${GPU_IDS} ${NUM_GPUS} --cfg_file ${CONFIG_FILE} --pretrained_model ${STAGE1_CKPT} --find_unused_parameters
 ```
+(`dist_train.sh` / `train.py` are LiDAR-only leftovers from LoGoNet; always use `dist_train_mm.sh` / `train_mm.py`.)
 
 ### Test and evaluate the pretrained models
 

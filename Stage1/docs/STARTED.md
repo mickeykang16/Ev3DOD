@@ -4,14 +4,17 @@ and the model configs are located within [tools/cfgs/det_model_configs](../detec
 
 Pre-trained checkpoint files can be downloaded from [here](https://drive.google.com/drive/folders/1_wl4eHlia9FOdOPKhCjEJ21w9LnG0OuS?usp=drive_link).
 
+Stage 1 is the 10 FPS LiDAR + image detector (no events). It is trained from scratch with the commands below; no extra `--pretrained_model` is needed (the comment about a 1-stage checkpoint inside the configs is inherited from LoGoNet). The resulting checkpoint is passed to Stage 2 with `--pretrained_model`. Prepare the data as described in [data/DATA_PREPROCESS.md](../../data/DATA_PREPROCESS.md) first.
+
 
 ## Training & Testing
 
 ### Train a model
 You could optionally add extra command line parameters `--batch_size ${BATCH_SIZE}` and `--epochs ${EPOCHS}` to specify your preferred parameters. 
 ```shell script
-sh scripts/dist_train.sh ${NUM_GPUS} --cfg_file ${CONFIG_FILE}
+bash scripts/dist_train_mm.sh ${GPU_IDS} ${NUM_GPUS} --cfg_file ${CONFIG_FILE} --find_unused_parameters
 ```
+(`dist_train.sh` / `train.py` are LiDAR-only leftovers from LoGoNet; always use `dist_train_mm.sh` / `train_mm.py`.)
 
 ### Test and evaluate the pretrained models
 

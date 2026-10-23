@@ -39,6 +39,10 @@ def load_data_to_gpu(batch_dict):
             for cam in val.keys():
                 temp[cam] = torch.from_numpy(val[cam]).int().cuda()
             batch_dict[key] = temp
+        elif key in ['gt_boxes'] and isinstance(val, list):
+            # collate_batch returns gt_boxes as a list over time steps (10 x [B, N, K]) of CPU tensors;
+            # move each one, otherwise the RoI heads receive CPU boxes (iou3d / ball query abort).
+            batch_dict[key] = [(v if isinstance(v, torch.Tensor) else torch.from_numpy(v)).float().cuda() for v in val]
         elif isinstance(val, np.ndarray):
             batch_dict[key] = torch.from_numpy(val).float().cuda()
         else:

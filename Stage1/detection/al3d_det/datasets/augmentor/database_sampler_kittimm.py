@@ -13,7 +13,6 @@ import torch.distributed as dist
 
 from al3d_utils.ops.iou3d_nms import iou3d_nms_utils
 from ...utils.kitti_utils import box_utils, common_utils, calibration_kitti, box2d_utils
-from al3d_det.datasets.kitti.kitti_object_eval_python import kitti_common
 import io
 
 class DataBaseSamplerKITTIMM(object):
@@ -282,6 +281,8 @@ class DataBaseSamplerKITTIMM(object):
                 obj_points[:, 2] -= mv_height[idx]
 
             if self.aug_with_img:
+                # KITTI-only dependency; the kitti package is not part of this release.
+                from al3d_det.datasets.kitti.kitti_object_eval_python import kitti_common
                 calib_file = kitti_common.get_calib_path(int(info['image_idx']), self.root_path, relative_path=False)
                 sampled_calib = calibration_kitti.Calibration(calib_file)
                 points_2d, depth_2d = sampled_calib.lidar_to_img(obj_points[:,:3])
