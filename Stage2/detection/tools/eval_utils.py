@@ -110,6 +110,10 @@ def eval_one_epoch(cfg, model, dataloader, epoch_id, logger, dist_test=False, sa
         rank, world_size = common_utils.get_dist_info()
         det_annos = common_utils.merge_results_dist_annos(det_annos, len(dataset)*10, tmpdir=result_dir / 'tmpdir')
         metric = common_utils.merge_results_dist([metric], world_size, tmpdir=result_dir / 'tmpdir')
+    else:
+        # det_annos holds one list of 10 time-step annos per sample; flatten it in sample order,
+        # as merge_results_dist_annos does in the distributed case (dataset.evaluation expects this).
+        det_annos = [anno for sample_annos in det_annos for anno in sample_annos]
 
     # if dist_test:
     #     rank, world_size = common_utils.get_dist_info()
