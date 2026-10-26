@@ -1,3 +1,4 @@
+import gc
 import glob
 import os
 
@@ -42,6 +43,9 @@ def train_one_epoch(model, optimizer, train_loader, model_func, lr_scheduler, ac
         lr_scheduler.step()
 
         accumulated_iter += 1
+        if accumulated_iter % 10 == 0:
+            # free spconv reference cycles that hold GPU memory (see eval_utils.eval_one_epoch)
+            gc.collect()
         disp_dict.update({'loss': loss.item(), 'lr': cur_lr})
 
         # log to console and tensorboard

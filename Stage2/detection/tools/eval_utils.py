@@ -1,3 +1,4 @@
+import gc
 import pickle
 import time
 
@@ -58,6 +59,9 @@ def eval_one_epoch(cfg, model, dataloader, epoch_id, logger, dist_test=False, sa
     det_annos = []
     
     for i, batch_dict in enumerate(dataloader):
+        # spconv 2.x sparse tensors form reference cycles that keep each frame's GPU tensors alive
+        # until Python's cyclic GC happens to run (observed: ~0.1 GB/frame, up to 18 GB on DSEC).
+        gc.collect()
         if 'kitti' in cfg.DATA_CONFIG.DATASET.lower():
             load_data_to_gpukitti(batch_dict)
         else:
@@ -196,6 +200,9 @@ def eval_one_epoch_private(cfg, model, dataloader, epoch_id, logger, dist_test=F
     batch_time = 0
     batch_idx = 0
     for i, batch_dict in enumerate(dataloader):
+        # spconv 2.x sparse tensors form reference cycles that keep each frame's GPU tensors alive
+        # until Python's cyclic GC happens to run (observed: ~0.1 GB/frame, up to 18 GB on DSEC).
+        gc.collect()
         if 'kitti' in cfg.DATA_CONFIG.DATASET.lower():
             load_data_to_gpukitti(batch_dict)
         else:
