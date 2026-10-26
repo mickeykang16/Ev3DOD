@@ -44,6 +44,10 @@ def find_num_points_per_part(batch_points, batch_boxes, grid_size):
     return torch.stack(points_per_parts)
 
 
+# Max points per chunk in find_num_points_per_part_multi (bounds peak GPU memory).
+POINT_CHUNK_SIZE = 200000
+
+
 def find_num_points_per_part_multi(batch_points, batch_boxes, grid_size, max_num_boxes, return_centroid=False):
     """
     Args:
@@ -66,28 +70,41 @@ def find_num_points_per_part_multi(batch_points, batch_boxes, grid_size, max_num
         bs_mask = (batch_idx == i)
         points = batch_points[bs_mask]
         box_idxs_of_pts = roiaware_pool3d_utils.points_in_multi_boxes_gpu(points.unsqueeze(0), boxes.unsqueeze(0), max_num_boxes).squeeze(0)
-        box_for_each_point = boxes[box_idxs_of_pts.long()]
-        xyz_local = points.unsqueeze(1) - box_for_each_point[..., 0:3]
-        xyz_local_original_shape = xyz_local.shape
-        xyz_local = xyz_local.reshape(-1, 1, 3)
-        # Flatten for rotating points
-        xyz_local = common_utils.rotate_points_along_z(
-            xyz_local, -box_for_each_point.reshape(-1, 7)[:, 6]
-        )
-        # Change coordinate frame to corner instead of center of box
-        xyz_local_corner = xyz_local.reshape(xyz_local_original_shape) + box_for_each_point[..., 3:6] / 2
-        # points_in_boxes_gpu gets points slightly outside of box, clamp values to make sure no out of index values
-        xyz_local_grid = (xyz_local_corner / (box_for_each_point[..., 3:6] / grid_size))
-        points_out_of_range = ((xyz_local_grid < 0) | (xyz_local_grid >= grid_size) | (xyz_local_grid.isnan())).any(-1).flatten()
-        xyz_local_grid = torch.cat((box_idxs_of_pts.unsqueeze(-1),
-                                    xyz_local_grid), dim=-1).long()
-        xyz_local_grid = xyz_local_grid.reshape(-1, xyz_local_grid.shape[-1])
-        # Filter based on valid box_idxs
-        valid_points_mask = (xyz_local_grid[:, 0] != -1) & (~points_out_of_range)
-        xyz_local_grid = xyz_local_grid[valid_points_mask]
+        # The per-point tensors below are (num_points, max_num_boxes, ...). Dense disparity point
+        # clouds (DSEC-3DOD) can have millions of points, so process the points in chunks and keep
+        # only the valid entries; concatenating in order gives exactly the unchunked result.
+        xyz_local_grid_list, xyz_local_list = [], []
+        for start in range(0, points.shape[0], POINT_CHUNK_SIZE):
+            chunk_points = points[start:start + POINT_CHUNK_SIZE]
+            chunk_box_idxs = box_idxs_of_pts[start:start + POINT_CHUNK_SIZE]
+            box_for_each_point = boxes[chunk_box_idxs.long()]
+            xyz_local = chunk_points.unsqueeze(1) - box_for_each_point[..., 0:3]
+            xyz_local_original_shape = xyz_local.shape
+            xyz_local = xyz_local.reshape(-1, 1, 3)
+            # Flatten for rotating points
+            xyz_local = common_utils.rotate_points_along_z(
+                xyz_local, -box_for_each_point.reshape(-1, 7)[:, 6]
+            )
+            # Change coordinate frame to corner instead of center of box
+            xyz_local_corner = xyz_local.reshape(xyz_local_original_shape) + box_for_each_point[..., 3:6] / 2
+            # points_in_boxes_gpu gets points slightly outside of box, clamp values to make sure no out of index values
+            xyz_local_grid = (xyz_local_corner / (box_for_each_point[..., 3:6] / grid_size))
+            points_out_of_range = ((xyz_local_grid < 0) | (xyz_local_grid >= grid_size) | (xyz_local_grid.isnan())).any(-1).flatten()
+            xyz_local_grid = torch.cat((chunk_box_idxs.unsqueeze(-1),
+                                        xyz_local_grid), dim=-1).long()
+            xyz_local_grid = xyz_local_grid.reshape(-1, xyz_local_grid.shape[-1])
+            # Filter based on valid box_idxs
+            valid_points_mask = (xyz_local_grid[:, 0] != -1) & (~points_out_of_range)
+            xyz_local_grid_list.append(xyz_local_grid[valid_points_mask])
+            if return_centroid:
+                xyz_local_list.append(xyz_local[valid_points_mask].squeeze(1))
+        if len(xyz_local_grid_list) > 0:
+            xyz_local_grid = torch.cat(xyz_local_grid_list, dim=0)
+        else:
+            xyz_local_grid = points.new_zeros((0, 4)).long()
 
         if return_centroid:
-            xyz_local = xyz_local[valid_points_mask].squeeze(1)
+            xyz_local = torch.cat(xyz_local_list, dim=0) if len(xyz_local_list) > 0 else points.new_zeros((0, 3))
             centroids, part_idxs, points_per_part = voxel_aggregation_utils.get_centroid_per_voxel(xyz_local, xyz_local_grid)
             points_per_part = torch.cat((points_per_part.unsqueeze(-1), centroids), dim=-1)
             # Sometimes no points in boxes, usually in the first few iterations. Return empty tensor in that case
